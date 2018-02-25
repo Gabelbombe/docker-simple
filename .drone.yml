@@ -1,0 +1,113 @@
+clone:
+  git:
+    image: plugins/git
+    depth: 50
+    tags: true
+
+pipeline:
+  build:
+    image: ehime/golang-testing
+    pull: true
+    commands:
+      - coverage all
+      - make release
+      - echo Done
+
+  # notify_1:
+  #   pull: true
+  #   image: plugins/slack
+  #   channel: jenkins
+  #   username: drone
+  #   when:
+  #     status: [ success, failure ]
+  #   template: >
+  #     {{#success build.status}}
+  #       {{ build.author }} successfully pushed to {{ build.branch}}
+  #     {{else}}
+  #       {{ build.author }} broke the build. Hang your head in shame.
+  #     {{/success}}
+  #   image_url: https://cdn3.iconfinder.com/data/icons/picons-social/57/16-apple-128.png
+
+  # notify_2:
+  #   pull: true
+  #   image: plugins/slack
+  #   channel: drone
+  #   username: drone
+  #   when:
+  #     status: [ success, failure ]
+  #   template: |
+  #     {{#success build.status}}
+  #       {{ build.author }} successfully pushed to {{ build.branch}}
+  #     {{else}}
+  #       {{ build.author }} broke the build. Hang your head in shame.
+  #     {{/success}}
+
+  # slack:
+  #   image: plugins/slack
+  #   channel: drone
+  #   username: drone
+  #   when:
+  #     status: [ killed, success, failure ]
+  #   template: |
+  #     *{{ build.status }}* <{{ build.link }}|{{ repo.owner }}/{{ repo.name }}#{{ truncate build.commit 8 }}> ({{ build.branch }}) by {{ build.author }}.
+  #   icon_url: https://cdn3.iconfinder.com/data/icons/picons-social/57/16-apple-128.png
+
+  # line:
+  #   image: ehime/drone-line
+  #   pull: true
+  #   to: U77234666b0313021f873b85de44209de
+  #   when:
+  #     status: [ success, failure ]
+
+  # facebook:
+  #   image: ehime/drone-facebook
+  #   pull: true
+  #   to: 1234973386524610
+  #   when:
+  #     status: [ success, failure ]
+
+  # gtalk_1:
+  #   image: ehime/drone-gtalk
+  #   pull: true
+  #   to:
+  #     - dodomeki@gmail.com:dodomeki@gmail.com
+  #     - dodomeki@gmail.com:test@gmail.com
+  #   when:
+  #     status: [ success, failure ]
+
+  # gtalk_2:
+  #   image: ehime/drone-gtalk
+  #   pull: true
+  #   only_match_email: true
+  #   message: "Please don't send duplicate of message"
+  #   to:
+  #     - dodomeki@gmail.com:dodomeki@gmail.com
+  #     - dodomeki@gmail.com
+  #   when:
+  #     status: [ success, failure ]
+
+  # telegram_1:
+  #   image: ehime/drone-telegram
+  #   pull: true
+  #   to: 65382999:dodomeki@gmail.com
+  #   when:
+  #     status: [ success, failure ]
+
+  # telegram_2:
+  #   image: ehime/drone-telegram
+  #   pull: true
+  #   only_match_email: true
+  #   to:
+  #     - 65382999:dodomeki@gmail.com
+  #     - 65382999
+  #   message: "Please don't send duplicate of message"
+  #   when:
+  #     status: [ success, failure ]
+
+  # github:
+  #   image: plugins/github-release
+  #   files:
+  #     - dist/release/*
+  #   when:
+  #     event: [ tag ]
+  #     branch: [ refs/tags/* ]

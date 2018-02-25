@@ -1,0 +1,7 @@
+build.tar.gz
+app
+gin-bin
+# ignore drone Secrets file
+secrets.yml
+.cover
+dist
